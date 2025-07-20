@@ -1,3 +1,6 @@
+// src/utils/vocabulary.ts
+import type { ComposerTranslation } from 'vue-i18n'; // Import the type for better type safety
+
 export interface VocabularyItem {
   id: string;
   key: string;
@@ -20,3 +23,15 @@ export const INTERACTIONS: VocabularyItem[] = [
   { id: 'tenpo', key: 'interactions.punctual' },
   { id: 'utala', key: 'interactions.courageous' }
 ];
+
+// Accept the translation function 't' as a parameter
+export function getPlaceName(t: ComposerTranslation, placeId: string): string {
+  const place = PLACES.find((p) => p.id === placeId);
+  return place ? t(place.key) : placeId;
+}
+
+// Accept the translation function 't' as a parameter
+export function getInteractionName(t: ComposerTranslation, interactionId: string): string {
+  const interaction = INTERACTIONS.find((i) => i.id === interactionId);
+  return interaction ? t(interaction.key) : interactionId;
+}

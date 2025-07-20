@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PLACES, INTERACTIONS } from './utils/vocabulary';
+import { getPlaceName, getInteractionName } from './utils/vocabulary';
 import {
   type Statement,
   serializePersonalityLink,
@@ -56,16 +56,6 @@ async function handleShare() {
   } catch (error) {
     alert(t('labels.copyFailed'));
   }
-}
-
-function getPlaceName(placeId: string): string {
-  const place = PLACES.find((p) => p.id === placeId);
-  return place ? t(place.key) : placeId;
-}
-
-function getInteractionName(interactionId: string): string {
-  const interaction = INTERACTIONS.find((i) => i.id === interactionId);
-  return interaction ? t(interaction.key) : interactionId;
 }
 
 // Lifecycle hooks
