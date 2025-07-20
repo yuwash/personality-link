@@ -11,12 +11,11 @@ import {
   moveSelectionUp,
   moveSelectionDown,
 } from './utils/personalityLink';
+import SelectionForm from './Selection.vue';
 
 const { t } = useI18n();
 
 // Reactive state
-const selectedPlace = ref('');
-const selectedInteraction = ref('');
 const selections = ref<Selection[]>([]);
 
 // Computed properties
@@ -28,21 +27,13 @@ const shareUrl = computed(() => {
   return serializedData.value ? `${baseUrl}#${serializedData.value}` : baseUrl;
 });
 
-const canAdd = computed(() => selectedPlace.value && selectedInteraction.value);
-
 // Methods
-function handleAdd() {
-  if (!canAdd.value) return;
-
+function handleAdd(selectedPlace: string, selectedInteraction: string) {
   selections.value = addSelection(
     selections.value,
-    selectedPlace.value,
-    selectedInteraction.value
+    selectedPlace,
+    selectedInteraction
   );
-
-  // Reset selections
-  selectedPlace.value = '';
-  selectedInteraction.value = '';
 }
 
 function handleRemove(index: number) {
@@ -120,57 +111,7 @@ watch(serializedData, (newData) => {
         </template>
       </b-navbar>
 
-      <!-- Selection Form -->
-      <div class="box">
-        <div class="columns">
-          <div class="column">
-            <b-field :label="t('labels.selectPlace')">
-              <b-select
-                v-model="selectedPlace"
-                :placeholder="t('labels.selectPlace')"
-                expanded
-              >
-                <option
-                  v-for="place in PLACES"
-                  :key="place.id"
-                  :value="place.id"
-                >
-                  {{ t(place.key) }}
-                </option>
-              </b-select>
-            </b-field>
-          </div>
-          <div class="column">
-            <b-field :label="t('labels.selectInteraction')">
-              <b-select
-                v-model="selectedInteraction"
-                :placeholder="t('labels.selectInteraction')"
-                expanded
-              >
-                <option
-                  v-for="interaction in INTERACTIONS"
-                  :key="interaction.id"
-                  :value="interaction.id"
-                >
-                  {{ t(interaction.key) }}
-                </option>
-              </b-select>
-            </b-field>
-          </div>
-          <div class="column is-narrow">
-            <b-field label=" ">
-              <b-button
-                type="is-success"
-                icon-left="plus"
-                @click="handleAdd"
-                :disabled="!canAdd"
-              >
-                {{ t('labels.add') }}
-              </b-button>
-            </b-field>
-          </div>
-        </div>
-      </div>
+      <SelectionForm @add-selection="handleAdd" />
 
       <!-- Selections List -->
       <div class="box" v-if="selections.length > 0">
