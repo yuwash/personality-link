@@ -12,6 +12,7 @@ import {
   moveStatementDown,
 } from './utils/personalityLink';
 import SelectionForm from './Selection.vue';
+import StatementsList from './StatementsList.vue';
 
 const { t } = useI18n();
 
@@ -34,18 +35,6 @@ function handleAdd(selectedPlace: string, selectedInteraction: string) {
     selectedPlace,
     selectedInteraction
   );
-}
-
-function handleRemove(index: number) {
-  statements.value = removeStatement(statements.value, index);
-}
-
-function handleMoveUp(index: number) {
-  statements.value = moveStatementUp(statements.value, index);
-}
-
-function handleMoveDown(index: number) {
-  statements.value = moveStatementDown(statements.value, index);
 }
 
 async function handleShare() {
@@ -102,69 +91,7 @@ watch(serializedData, (newData) => {
       </b-navbar>
 
       <SelectionForm @add-statement="handleAdd" />
-
-      <!-- Statements List -->
-      <div class="box" v-if="statements.length > 0">
-        <div
-          v-for="(statement, index) in statements"
-          :key="`${statement.placeId}-${statement.interactionId}`"
-          class="level is-mobile"
-          style="margin-bottom: 1rem"
-        >
-          <div class="level-left">
-            <div class="level-item">
-              <span class="tag is-large is-primary">{{ index + 1 }}</span>
-            </div>
-            <div class="level-item">
-              <div>
-                <strong>{{ getPlaceName(statement.placeId) }}</strong>
-                <br />
-                <span class="has-text-grey">{{
-                  getInteractionName(statement.interactionId)
-                }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="level-right">
-            <div class="level-item">
-              <b-field class="has-addons">
-                <p class="control">
-                  <b-button
-                    size="is-small"
-                    icon-right="arrow-up-thick"
-                    @click="handleMoveUp(index)"
-                    :disabled="index === 0"
-                    :title="t('labels.moveUp')"
-                  />
-                </p>
-                <p class="control">
-                  <b-button
-                    size="is-small"
-                    icon-right="arrow-down-thick"
-                    @click="handleMoveDown(index)"
-                    :disabled="index === statements.length - 1"
-                    :title="t('labels.moveDown')"
-                  />
-                </p>
-                <p class="control">
-                  <b-button
-                    size="is-small"
-                    type="is-danger"
-                    icon-right="delete"
-                    @click="handleRemove(index)"
-                    :title="t('labels.remove')"
-                  />
-                </p>
-              </b-field>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Empty State -->
-      <div class="box has-text-centered" v-else>
-        <p class="has-text-grey">{{ t('labels.noStatements') }}</p>
-      </div>
+      <StatementsList :statements="statements" @update:statements="statements = $event" />
     </div>
   </div>
 </template>
