@@ -3,24 +3,24 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { PLACES, INTERACTIONS } from './utils/vocabulary';
 import {
-  type Selection,
+  type Statement,
   serializePersonalityLink,
   deserializePersonalityLink,
-  addSelection,
-  removeSelection,
-  moveSelectionUp,
-  moveSelectionDown,
+  addStatement,
+  removeStatement,
+  moveStatementUp,
+  moveStatementDown,
 } from './utils/personalityLink';
 import SelectionForm from './Selection.vue';
 
 const { t } = useI18n();
 
 // Reactive state
-const selections = ref<Selection[]>([]);
+const statements = ref<Statement[]>([]);
 
 // Computed properties
 const serializedData = computed(() =>
-  serializePersonalityLink(selections.value)
+  serializePersonalityLink(statements.value)
 );
 const shareUrl = computed(() => {
   const baseUrl = window.location.origin + window.location.pathname;
@@ -29,23 +29,23 @@ const shareUrl = computed(() => {
 
 // Methods
 function handleAdd(selectedPlace: string, selectedInteraction: string) {
-  selections.value = addSelection(
-    selections.value,
+  statements.value = addStatement(
+    statements.value,
     selectedPlace,
     selectedInteraction
   );
 }
 
 function handleRemove(index: number) {
-  selections.value = removeSelection(selections.value, index);
+  statements.value = removeStatement(statements.value, index);
 }
 
 function handleMoveUp(index: number) {
-  selections.value = moveSelectionUp(selections.value, index);
+  statements.value = moveStatementUp(statements.value, index);
 }
 
 function handleMoveDown(index: number) {
-  selections.value = moveSelectionDown(selections.value, index);
+  statements.value = moveStatementDown(statements.value, index);
 }
 
 async function handleShare() {
@@ -72,7 +72,7 @@ function getInteractionName(interactionId: string): string {
 onMounted(() => {
   const hash = window.location.hash.slice(1);
   if (hash) {
-    selections.value = deserializePersonalityLink(hash);
+    statements.value = deserializePersonalityLink(hash);
   }
 });
 
@@ -103,7 +103,7 @@ watch(serializedData, (newData) => {
               type="is-primary"
               icon-left="share"
               @click="handleShare"
-              :disabled="selections.length === 0"
+              :disabled="statements.length === 0"
             >
               {{ t('labels.share') }}
             </b-button>
@@ -111,13 +111,13 @@ watch(serializedData, (newData) => {
         </template>
       </b-navbar>
 
-      <SelectionForm @add-selection="handleAdd" />
+      <SelectionForm @add-statement="handleAdd" />
 
-      <!-- Selections List -->
-      <div class="box" v-if="selections.length > 0">
+      <!-- Statements List -->
+      <div class="box" v-if="statements.length > 0">
         <div
-          v-for="(selection, index) in selections"
-          :key="`${selection.placeId}-${selection.interactionId}`"
+          v-for="(statement, index) in statements"
+          :key="`${statement.placeId}-${statement.interactionId}`"
           class="level is-mobile"
           style="margin-bottom: 1rem"
         >
@@ -127,10 +127,10 @@ watch(serializedData, (newData) => {
             </div>
             <div class="level-item">
               <div>
-                <strong>{{ getPlaceName(selection.placeId) }}</strong>
+                <strong>{{ getPlaceName(statement.placeId) }}</strong>
                 <br />
                 <span class="has-text-grey">{{
-                  getInteractionName(selection.interactionId)
+                  getInteractionName(statement.interactionId)
                 }}</span>
               </div>
             </div>
@@ -152,7 +152,7 @@ watch(serializedData, (newData) => {
                     size="is-small"
                     icon-right="arrow-down-thick"
                     @click="handleMoveDown(index)"
-                    :disabled="index === selections.length - 1"
+                    :disabled="index === statements.length - 1"
                     :title="t('labels.moveDown')"
                   />
                 </p>
@@ -173,7 +173,7 @@ watch(serializedData, (newData) => {
 
       <!-- Empty State -->
       <div class="box has-text-centered" v-else>
-        <p class="has-text-grey">{{ t('labels.noSelections') }}</p>
+        <p class="has-text-grey">{{ t('labels.noStatements') }}</p>
       </div>
     </div>
   </div>

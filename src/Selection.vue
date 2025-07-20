@@ -10,11 +10,11 @@ const selectedInteraction = ref('');
 
 const canAdd = computed(() => selectedPlace.value && selectedInteraction.value);
 
-const emit = defineEmits(['add-selection']);
+const emit = defineEmits(['add-statement']);
 
 function handleAdd() {
   if (!canAdd.value) return;
-  emit('add-selection', selectedPlace.value, selectedInteraction.value);
+  emit('add-statement', selectedPlace.value, selectedInteraction.value);
   selectedPlace.value = '';
   selectedInteraction.value = '';
 }

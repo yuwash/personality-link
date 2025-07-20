@@ -28,7 +28,7 @@ const messages = {
       remove: 'Remove',
       moveUp: 'Move up',
       moveDown: 'Move down',
-      noSelections: 'No personality links created yet. Start by selecting a place and interaction above.',
+      noStatements: 'No personality links created yet. Start by selecting a place and interaction above.',
       linkCopied: 'Link copied to clipboard!',
       copyFailed: 'Failed to copy link. Please copy the URL manually.'
     }

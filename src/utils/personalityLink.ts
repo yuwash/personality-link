@@ -1,68 +1,68 @@
-export interface Selection {
+export interface Statement {
   placeId: string;
   interactionId: string;
 }
 
-export function serializePersonalityLink(selections: Selection[]): string {
-  if (selections.length === 0) return '';
+export function serializePersonalityLink(statements: Statement[]): string {
+  if (statements.length === 0) return '';
   
-  const serializedSelections = selections.map(
-    selection => `${selection.placeId}-${selection.interactionId}`
+  const serializedStatements = statements.map(
+    statement => `${statement.placeId}-${statement.interactionId}`
   ).join(';');
   
-  return `v1;${serializedSelections}`;
+  return `v1;${serializedStatements}`;
 }
 
-export function deserializePersonalityLink(serializedString: string): Selection[] {
+export function deserializePersonalityLink(serializedString: string): Statement[] {
   if (!serializedString) return [];
   
   const parts = serializedString.split(';');
   if (parts.length < 2 || parts[0] !== 'v1') return [];
   
-  const selections: Selection[] = [];
+  const statements: Statement[] = [];
   for (let i = 1; i < parts.length; i++) {
     const [placeId, interactionId] = parts[i].split('-');
     if (placeId && interactionId) {
-      selections.push({ placeId, interactionId });
+      statements.push({ placeId, interactionId });
     }
   }
   
-  return selections;
+  return statements;
 }
 
-export function addSelection(
-  selections: Selection[], 
+export function addStatement(
+  statements: Statement[], 
   placeId: string, 
   interactionId: string
-): Selection[] {
-  const newSelection = { placeId, interactionId };
+): Statement[] {
+  const newStatement = { placeId, interactionId };
   
   // Check if this combination already exists
-  const exists = selections.some(
-    selection => selection.placeId === placeId && selection.interactionId === interactionId
+  const exists = statements.some(
+    statement => statement.placeId === placeId && statement.interactionId === interactionId
   );
   
-  if (exists) return selections;
+  if (exists) return statements;
   
-  return [...selections, newSelection];
+  return [...statements, newStatement];
 }
 
-export function removeSelection(selections: Selection[], index: number): Selection[] {
-  return selections.filter((_, i) => i !== index);
+export function removeStatement(statements: Statement[], index: number): Statement[] {
+  return statements.filter((_, i) => i !== index);
 }
 
-export function moveSelectionUp(selections: Selection[], index: number): Selection[] {
-  if (index <= 0) return selections;
+export function moveStatementUp(statements: Statement[], index: number): Statement[] {
+  if (index <= 0) return statements;
   
-  const newSelections = [...selections];
-  [newSelections[index - 1], newSelections[index]] = [newSelections[index], newSelections[index - 1]];
-  return newSelections;
+  const newStatements = [...statements];
+  [newStatements[index - 1], newStatements[index]] = [newStatements[index], newStatements[index - 1]];
+  return newStatements;
 }
 
-export function moveSelectionDown(selections: Selection[], index: number): Selection[] {
-  if (index >= selections.length - 1) return selections;
+export function moveStatementDown(statements: Statement[], index: number): Statement[] {
+  if (index >= statements.length - 1) return statements;
   
-  const newSelections = [...selections];
-  [newSelections[index], newSelections[index + 1]] = [newSelections[index + 1], newSelections[index]];
-  return newSelections;
+  const newStatements = [...statements];
+  [newStatements[index], newStatements[index + 1]] = [newStatements[index + 1], newStatements[index]];
+  return newStatements;
 }
