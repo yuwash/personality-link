@@ -1,15 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getPlaceName, getInteractionName } from './utils/vocabulary';
 import {
   type Statement,
   serializePersonalityLink,
   deserializePersonalityLink,
   addStatement,
-  removeStatement,
-  moveStatementUp,
-  moveStatementDown,
 } from './utils/personalityLink';
 import SelectionForm from './Selection.vue';
 import StatementsList from './StatementsList.vue';
